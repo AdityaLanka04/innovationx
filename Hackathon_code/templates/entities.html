@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extracted Entities</title>
+</head>
+<body>
+    <h1>Extracted Entities</h1>
+    <h2>Name and Contact:</h2>
+    <ul>
+        {% for entity in entities %}
+            {% if entity.label == 'NAME' or entity.label == 'CONTACT' %}
+                <li>{{ entity.text }} ({{ entity.label }})</li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    <h2>Companies and Years of Experience:</h2>
+    <ul>
+        {% for company, experience in combined_data %}
+            <li>{{ company }} ({{ experience }})</li>
+        {% endfor %}
+    </ul>
+    <h2>Other Entities:</h2>
+    {% set special_labels = ['NAME', 'CONTACT', 'COMPANIES WORKED AT', 'YEARS OF EXPERIENCE'] %}
+    {% set categories = entities | groupby('label') %}
+    {% for category, category_entities in categories %}
+        {% if category not in special_labels %}
+            <h3>{{ category }}</h3>
+            <ul>
+                {% for entity in category_entities %}
+                    <li>{{ entity.text }} ({{ entity.label }})</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endfor %}
+</body>
+</html>
